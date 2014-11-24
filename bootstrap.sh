@@ -42,8 +42,8 @@ if ! [ $? -eq 0 ]
 then
     cd /tmp/
     wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz
-    tar xf kibana-3.1.0.tar.gz -C /var/www
-    cd /var/www
+    tar xf kibana-3.1.0.tar.gz -C /var/www/html
+    cd /var/www/html
     mv kibana-3.1.0 kibana
     echo "Done installing kibana successfully ..."
 fi
