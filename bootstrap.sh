@@ -1,49 +1,67 @@
-#!/bin/bash
+#/bin/bash
 
 apt-get -y update
 
-apt-get install -y curl vim
+apt-get install -y curl vim 
 
-dpkg -l | grep apache2
+echo "Installing java ... "
+apt-get -y install openjdk-7-jre
+
+dpkg -l | grep logstash
 if ! [ $? -eq 0 ]
-then
-    apt-get -y install apache2
-    /etc/init.d/apache2 start
-    echo "Done installing apache successfully ..."
+then 
+	echo "Installing logstash ..."
+	apt-get -y update
+	mkdir /opt/logstash
+	cd /opt/logstash
+	wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb -P /tmp
+	dpkg -i /tmp/logstash_1.4.2-1-2c0f5a1_all.deb
+	sleep 10
+fi
+
+dpkg -l | grep redis
+if ! [ $? -eq 0 ]
+then 
+	echo "Installing a broker [Redis] ... "
+	apt-get -y update
+	apt-get -y install redis-server
+	echo "Configuring redis server"
+	sed -i 's|bind 127.0.0.1|#bind 127.0.0.1|g' /etc/redis/redis.conf
+	sudo /etc/init.d/redis-server force-reload
+	sleep 10
 fi
 
 dpkg -l | grep elasticsearch
 if ! [ $? -eq 0 ]
-then
-    apt-get -y install openjdk-7-jre
-
-    wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.2.1.deb
-    dpkg -i elasticsearch-1.2.1.deb
-
-    update-rc.d elasticsearch defaults 95 10
-    /etc/init.d/elasticsearch start
-    echo "Done installing elastic search successfully ..."
+then 
+	echo "Installing elasticsearch ... "
+	wget https://download.elasticsearch.org/elasticsearch/elasticsearch/elasticsearch-1.4.0.deb -P /tmp/
+	dpkg -i /tmp/elasticsearch-1.4.0.deb
+	echo "Configuring elasticsearch ... "
+	sed -i 's|#cluster.name: elasticsearch|cluster.name: logstash|g' /etc/elasticsearch/elasticsearch.yml
+	sed -i 's|#node.name: "Franz Kafka"|node.name: "Simon Takite"|g' /etc/elasticsearch/elasticsearch.yml
+	/etc/init.d/elasticsearch restart
 fi
 
-test -L /opt/logstash
-if ! [ $? -eq 0 ]
-then
-    cd /opt
-    wget https://download.elasticsearch.org/logstash/logstash/logstash-1.4.1.tar.gz
-    tar xzf logstash-1.4.1.tar.gz -C /opt/
-    ln -sf logstash-1.4.1 logstash
-    #cd /vagrant_data/scripts
-    #sh logstash.sh start
-    echo "Done installing logstash successfully ..."
-fi
+echo "Creating central configuration ... "
+touch /etc/logstash/central.conf
+cat <<EOF>> /etc/logstash/central.conf
+input {
+	redis {
+		host =>"192.168.2.10"
+		type => "redis-input"
+		data_type => "list"
+		key => "logstash"
+	}
+}
 
-test -d /var/www/kibana
-if ! [ $? -eq 0 ]
-then
-    cd /tmp/
-    wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.0.tar.gz
-    tar xf kibana-3.1.0.tar.gz -C /var/www/html
-    cd /var/www/html
-    mv kibana-3.1.0 kibana
-    echo "Done installing kibana successfully ..."
-fi
+output {
+	stdout { }
+	elasticsearch {
+		cluster => "logstash"
+	}
+} 
+EOF
+
+wget https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers -P /tmp
+mv /tmp/sudoers /etc/sudoers

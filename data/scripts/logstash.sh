@@ -26,6 +26,6 @@ case "$1" in
         __start
         ;;
     *)
-        echo "Utilisez start/stop/restart"
+        echo "Usage: start/stop/restart"
         ;;
 esac
