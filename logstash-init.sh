@@ -1,7 +1,12 @@
 #!/bin/sh
-#
-# This script manages the logstash service
-#
+### BEGIN INIT INFO
+# Provides:          logstash-init
+# Required-Start:    $local_fs $network $named $time $syslog
+# Required-Stop:     $local_fs $network $named $time $syslog
+# Default-Start:     2 3 4 5
+# Default-Stop:      0 1 6
+# Description:       Starts/stops/uninstalls logstash service
+### END INIT INFO
 
 SCRIPT="logstash agent --verbose -f /etc/logstash/central.conf" --log /var/log/logstash/logstash-init.log
 RUNAS="root"
