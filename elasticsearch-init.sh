@@ -1,18 +1,18 @@
 #!/bin/sh
 ### BEGIN INIT INFO
-# Provides:          logstash-init
+# Provides:          elasticsearch-init
 # Required-Start:    $local_fs $network $named $time $syslog
 # Required-Stop:     $local_fs $network $named $time $syslog
 # Default-Start:     2 3 4 5
 # Default-Stop:      0 1 6
-# Description:       Starts/stops/uninstalls logstash service
+# Description:       Starts/stops/uninstalls elasticsearch service
 ### END INIT INFO
 
-SCRIPT="logstash agent --verbose -f /etc/logstash/central.conf" --log /var/log/logstash/logstash-init.log
+SCRIPT="/elasticsearch-init.sh" --log /var/log/logstash/elasticsearch-init.log
 RUNAS="root"
 
-PIDFILE=/var/run/logstash-init.pid
-LOGFILE=/var/log/logstash/logstash-service.log
+PIDFILE=/var/run/elasticsearch-init.pid
+LOGFILE=/var/log/logstash/elasticsearch-service.log
 
 start() {
 	if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then

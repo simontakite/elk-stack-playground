@@ -44,7 +44,12 @@ then
 fi
 
 echo "Creating central configuration ... "
+
 touch /etc/logstash/central.conf
+touch /var/log/logstash/logstash-init.log
+touch /var/log/elasticsearch/elasticsearch-service.log
+touch /var/log/elasticsearch/elasticsearch-init.log
+
 cat <<EOF>> /etc/logstash/central.conf
 input {
 	redis {
@@ -78,6 +83,16 @@ mv /tmp/logstash-init.sh /etc/init.d/
 chmod +x /etc/init.d/logstash-init.sh
 update-rc.d logstash-init.sh start 20 2 3 4 5 . stop 20 0 1 6 .
 
+# setup elastic search service
+wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/elasticsearch-init.sh" -P /tmp/
+mv /tmp/elasticsearch-init.sh /etc/init.d/
+chmod +x /etc/init.d/elasticsearch-init.sh
+update-rc.d elasticsearch-init.sh start 20 2 3 4 5 . stop 20 0 1 6 .
+
 # Generate locale
 locale-gen nb_NO.UTF-8
 dpkg-reconfigure locales
+
+sleep 10
+echo "Restarting ... "
+reboot -f now
