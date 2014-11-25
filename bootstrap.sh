@@ -14,7 +14,7 @@ then
 	apt-get -y update
 	mkdir /opt/logstash
 	cd /opt/logstash
-	wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb -P /tmp
+	wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb -P /tmp/
 	dpkg -i /tmp/logstash_1.4.2-1-2c0f5a1_all.deb
 	sleep 10
 fi
@@ -63,5 +63,7 @@ output {
 } 
 EOF
 
-wget https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers -P /tmp
+wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers" -P /tmp/
 mv /tmp/sudoers /etc/sudoers
+wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/bashrc" -P /tmp/
+mv /tmp/bashrc /home/vagrant/.bashrc
