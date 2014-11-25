@@ -1,9 +1,5 @@
 #/bin/bash
 
-apt-get -y update
-
-apt-get install -y curl vim 
-
 echo "Installing java ... "
 apt-get -y install openjdk-7-jre
 
@@ -11,7 +7,6 @@ dpkg -l | grep logstash
 if ! [ $? -eq 0 ]
 then 
 	echo "Installing logstash ..."
-	apt-get -y update
 	mkdir /opt/logstash
 	cd /opt/logstash
 	wget https://download.elasticsearch.org/logstash/logstash/packages/debian/logstash_1.4.2-1-2c0f5a1_all.deb -P /tmp/
@@ -23,7 +18,6 @@ dpkg -l | grep redis
 if ! [ $? -eq 0 ]
 then 
 	echo "Installing a broker [Redis] ... "
-	apt-get -y update
 	apt-get -y install redis-server
 	echo "Configuring redis server"
 	sed -i 's|bind 127.0.0.1|#bind 127.0.0.1|g' /etc/redis/redis.conf
@@ -88,10 +82,6 @@ wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/elasti
 mv /tmp/elasticsearch-init.sh /etc/init.d/
 chmod +x /etc/init.d/elasticsearch-init.sh
 update-rc.d elasticsearch-init.sh start 20 2 3 4 5 . stop 20 0 1 6 .
-
-# Generate locale
-locale-gen nb_NO.UTF-8
-dpkg-reconfigure locales
 
 sleep 10
 echo "Restarting ... "

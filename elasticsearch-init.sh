@@ -8,7 +8,7 @@
 # Description:       Starts/stops/uninstalls elasticsearch service
 ### END INIT INFO
 
-SCRIPT="/elasticsearch-init.sh" --log /var/log/logstash/elasticsearch-init.log
+SCRIPT="/etc/init.d/elasticsearch start"
 RUNAS="root"
 
 PIDFILE=/var/run/elasticsearch-init.pid

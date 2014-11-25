@@ -9,6 +9,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # options are documented and commented below. For a complete reference,
   # please see the online documentation at vagrantup.com.
 
+  hostname = "elkstack.box"
+  locale = "nb_NO.UTF.8"
+
   # Every Vagrant virtual environment requires a box to build off of.
   config.vm.box = "base"
 
@@ -25,7 +28,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
 
   # Create a private network, which allows host-only access to the machine
   # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10"
+  config.vm.network "private_network", ip: "192.168.2.10"
 
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -51,13 +54,16 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
     vb.gui = false
 
     # Use VBoxManage to customize the VM. For example to change memory:
-    vb.customize ["modifyvm", :id, "--memory", "512"]
+    vb.customize ["modifyvm", :id, "--memory", "1024"]
   end
   #
   # View the documentation for the provider you're using for more
   # information on available options.
 
   config.vm.provision :shell, path: "bootstrap.sh"
+  config.vm.provision :shell, :inline => "touch .hushlogin"
+  config.vm.provision :shell, :inline => "hostname #{hostname} && locale-gen #{locale}"
+  config.vm.provision :shell, :inline => "apt-get update --fix-missing"
 
   # Enable provisioning with CFEngine. CFEngine Community packages are
   # automatically installed. For example, configure the host as a
