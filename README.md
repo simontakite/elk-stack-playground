@@ -1,2 +1,2 @@
 # VAGRANT-ELK
-- A test environment for ELF
+- A test environment for ELK
