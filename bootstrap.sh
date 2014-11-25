@@ -76,7 +76,7 @@ wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/logsta
 mv /tmp/logstash-init.sh /etc/init.d/
 
 chmod +x /etc/init.d/logstash-init.sh
-update-rc.d logstash-init.sh default
+update-rc.d logstash-init.sh start 20 2 3 4 5 . stop 20 0 1 6 .
 
 # Generate locale
 locale-gen nb_NO.UTF-8
