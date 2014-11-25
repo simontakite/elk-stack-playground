@@ -3,11 +3,11 @@
 # This script manages the logstash service
 #
 
-SCRIPT="logstash agent --verbose -f /etc/logstash/central.conf" --log /var/log/logstash/logstash-init
+SCRIPT="logstash agent --verbose -f /etc/logstash/central.conf" --log /var/log/logstash/logstash-init.log
 RUNAS="root"
 
 PIDFILE=/var/run/logstash-init.pid
-LOGFILE=/var/log/logstash/logstash-init.log
+LOGFILE=/var/log/logstash/logstash-service.log
 
 start() {
 	if [ -f /var/run/$PIDNAME ] && kill -0 $(cat /var/run/$PIDNAME); then

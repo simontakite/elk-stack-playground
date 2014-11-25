@@ -65,5 +65,12 @@ EOF
 
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers" -P /tmp/
 mv /tmp/sudoers /etc/sudoers
+
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/bashrc" -P /tmp/
 mv /tmp/bashrc /home/vagrant/.bashrc
+
+wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/logstash-init.sh" -P /tmp/
+mv /tmp/logstash-init.sh /etc/init.d/
+
+chmod +x /etc/init.d/logstash-init.sh
+update-rc.d logstash-init.sh default
