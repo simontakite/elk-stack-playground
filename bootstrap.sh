@@ -63,14 +63,21 @@ output {
 } 
 EOF
 
+# setup sudoers
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers" -P /tmp/
 mv /tmp/sudoers /etc/sudoers
 
+# setup bashrc
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/bashrc" -P /tmp/
 mv /tmp/bashrc /home/vagrant/.bashrc
 
+# setup logstash service
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/logstash-init.sh" -P /tmp/
 mv /tmp/logstash-init.sh /etc/init.d/
 
 chmod +x /etc/init.d/logstash-init.sh
 update-rc.d logstash-init.sh default
+
+# Generate locale
+locale-gen nb_NO.UTF-8
+dpkg-reconfigure locales
