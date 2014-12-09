@@ -14,16 +14,16 @@ then
 	sleep 10
 fi
 
-dpkg -l | grep redis
-if ! [ $? -eq 0 ]
-then 
-	echo "Installing a broker [Redis] ... "
-	apt-get -y install redis-server
-	echo "Configuring redis server"
-	sed -i 's|bind 127.0.0.1|#bind 127.0.0.1|g' /etc/redis/redis.conf
-	sudo /etc/init.d/redis-server force-reload
-	sleep 10
-fi
+#dpkg -l | grep redis
+#if ! [ $? -eq 0 ]
+#then 
+#	echo "Installing a broker [Redis] ... "
+#	apt-get -y install redis-server
+#	echo "Configuring redis server"
+#	sed -i 's|bind 127.0.0.1|#bind 127.0.0.1|g' /etc/redis/redis.conf
+#sudo /etc/init.d/redis-server force-reload
+#	sleep 10
+#fi
 
 dpkg -l | grep elasticsearch
 if ! [ $? -eq 0 ]
@@ -44,23 +44,23 @@ touch /var/log/logstash/logstash-init.log
 touch /var/log/elasticsearch/elasticsearch-service.log
 touch /var/log/elasticsearch/elasticsearch-init.log
 
-cat <<EOF>> /etc/logstash/central.conf
-input {
-	redis {
-		host =>"192.168.2.10"
-		type => "redis-input"
-		data_type => "list"
-		key => "logstash"
-	}
-}
+#cat <<EOF>> /etc/logstash/central.conf
+#input {
+#	redis {
+#		host =>"192.168.2.10"
+#		type => "redis-input"
+#		data_type => "list"
+#		key => "logstash"
+#	}
+#}
 
-output {
-	stdout { }
-	elasticsearch {
-		cluster => "logstash"
-	}
-} 
-EOF
+#output {
+#	stdout { }
+#	elasticsearch {
+#		cluster => "logstash"
+#	}
+#} 
+#EOF
 
 # setup sudoers
 wget "https://raw.githubusercontent.com/simontakite/ELK-playground/master/sudoers" -P /tmp/
