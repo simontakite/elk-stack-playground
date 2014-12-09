@@ -25,6 +25,11 @@ fi
 #	sleep 10
 #fi
 
+echo "Installing kibana ... "
+wget https://download.elasticsearch.org/kibana/kibana/kibana-3.1.2.tar.gz -P /tmp/
+tar -xvfz /tmp/kibana-3.1.2.tar.gz 
+mv /tmp/kibana-3.1.2.tar.gz /var/www/html/kibana
+
 dpkg -l | grep elasticsearch
 if ! [ $? -eq 0 ]
 then 
